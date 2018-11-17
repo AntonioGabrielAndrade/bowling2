@@ -57,6 +57,8 @@
   (testing "can calc a perfect game score"
     (is (= 300 (score [10 10 10 10 10 10 10 10 10 10 10 10]))))
   (testing "can calc an all-spare game score"
-    (is (= 150 (score [5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5])))))
+    (is (= 150 (score [5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5]))))
+  (testing "random game score"
+    (is (= 145 (score [1 9 2 4 10 10 10 7 1 2 8 7 0 0 0 10 1 9])))))
 
 (run-tests 'bowling-kata.core-test)

@@ -1,23 +1,22 @@
 (ns bowling-kata.core
   (:gen-class))
 
+(defn next-frame-size [rolls frame-number]
+  (cond
+    (= 10 frame-number) 3
+    (= 10 (first rolls)) 1
+    :else 2))
+
 (defn to-frames [rolls]
   (loop [remaining rolls
          frame-number 1
          frames []]
     (if (empty? remaining)
       frames
-      (if (= 10 frame-number)
-        (recur (drop 3 remaining)
+      (let [size (next-frame-size remaining frame-number)]
+        (recur (drop size remaining)
                (inc frame-number)
-               (conj frames (take 3 remaining)))
-        (if (= 10 (first remaining))
-          (recur (drop 1 remaining)
-                 (inc frame-number)
-                 (conj frames (take 1 remaining)))
-          (recur (drop 2 remaining)
-                 (inc frame-number)
-                 (conj frames (take 2 remaining))))))))
+               (conj frames (take size remaining)))))))
 
 (defn spare? [frame]
   (and (= 2 (count frame))

@@ -2,7 +2,22 @@
   (:gen-class))
 
 (defn to-frames [rolls]
-  (partition 2 rolls))
+  (loop [remaining rolls
+         frame-number 1
+         frames []]
+    (if (empty? remaining)
+      frames
+      (if (= 10 frame-number)
+        (recur (drop 3 remaining)
+               (inc frame-number)
+               (conj frames (take 3 remaining)))
+        (if (= 10 (first remaining))
+          (recur (drop 1 remaining)
+                 (inc frame-number)
+                 (conj frames (take 1 remaining)))
+          (recur (drop 2 remaining)
+                 (inc frame-number)
+                 (conj frames (take 2 remaining))))))))
 
 (defn spare? [frame]
   (and (= 2 (count frame))
@@ -11,11 +26,11 @@
 (defn strike? [frame]
   (= 10 (first frame)))
 
-(defn put-frame-score [frame next-frame scores]
+(defn put-frame-score [[frame & others] scores]
   (if (strike? frame)
-    (conj scores (+ 10 (reduce + next-frame)))
+    (conj scores (+ (reduce + frame) (reduce + (take 2 (flatten others)))))
     (if (spare? frame)
-      (conj scores (+ (reduce + frame) (first next-frame)))
+      (conj scores (+ (reduce + frame) (first (first others))))
       (conj scores (reduce + frame)))))
 
 (defn frame-scores [frames]
@@ -24,7 +39,7 @@
     (if (empty? remaining)
       scores
       (recur (rest remaining)
-             (put-frame-score (first remaining) (second remaining) scores)))))
+             (put-frame-score remaining scores)))))
 
 (defn score [rolls]
   (reduce + (frame-scores (to-frames rolls))))

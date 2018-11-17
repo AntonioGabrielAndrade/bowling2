@@ -8,10 +8,15 @@
   (and (= 2 (count frame))
        (= 10 (reduce + frame))))
 
+(defn strike? [frame]
+  (= 10 (first frame)))
+
 (defn put-frame-score [frame next-frame scores]
-  (if (spare? frame)
-    (conj scores (+ (reduce + frame) (first next-frame)))
-    (conj scores (reduce + frame))))
+  (if (strike? frame)
+    (conj scores (+ 10 (reduce + next-frame)))
+    (if (spare? frame)
+      (conj scores (+ (reduce + frame) (first next-frame)))
+      (conj scores (reduce + frame)))))
 
 (defn frame-scores [frames]
   (loop [remaining frames

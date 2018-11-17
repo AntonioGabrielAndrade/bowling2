@@ -25,12 +25,19 @@
 (defn strike? [frame]
   (= 10 (first frame)))
 
+(defn strike-extra-score [remaining-frames]
+  (reduce + (take 2 (flatten remaining-frames))))
+
+(defn spare-extra-score [remaining-frames]
+  (first (first remaining-frames)))
+
 (defn next-frame-score [[frame & others]]
-  (if (strike? frame)
-    (+ (reduce + frame) (reduce + (take 2 (flatten others))))
-    (if (spare? frame)
-      (+ (reduce + frame) (first (first others)))
-      (reduce + frame))))
+  (let [simple-score (reduce + frame)]
+    (if (strike? frame)
+      (+ simple-score (strike-extra-score others))
+      (if (spare? frame)
+        (+ simple-score (spare-extra-score others))
+        simple-score))))
 
 (defn frame-scores [frames]
   (loop [remaining frames

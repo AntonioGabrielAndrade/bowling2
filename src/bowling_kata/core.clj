@@ -25,12 +25,12 @@
 (defn strike? [frame]
   (= 10 (first frame)))
 
-(defn put-frame-score [[frame & others] scores]
+(defn next-frame-score [[frame & others]]
   (if (strike? frame)
-    (conj scores (+ (reduce + frame) (reduce + (take 2 (flatten others)))))
+    (+ (reduce + frame) (reduce + (take 2 (flatten others))))
     (if (spare? frame)
-      (conj scores (+ (reduce + frame) (first (first others))))
-      (conj scores (reduce + frame)))))
+      (+ (reduce + frame) (first (first others)))
+      (reduce + frame))))
 
 (defn frame-scores [frames]
   (loop [remaining frames
@@ -38,7 +38,7 @@
     (if (empty? remaining)
       scores
       (recur (rest remaining)
-             (put-frame-score remaining scores)))))
+             (conj scores (next-frame-score remaining))))))
 
 (defn score [rolls]
   (reduce + (frame-scores (to-frames rolls))))

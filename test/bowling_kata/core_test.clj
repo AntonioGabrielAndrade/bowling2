@@ -25,13 +25,13 @@
     (is (strike? [10]))
     (is (not (strike? [5 5])))))
 
-(deftest put-frame-score-test
+(deftest next-frame-score-test
   (testing "can compute a simple frame score"
-    (is (= [7] (put-frame-score [[5 2] [1 2]] []))))
+    (is (= 7 (next-frame-score [[5 2] [1 2]]))))
   (testing "can compute a spare frame score"
-    (is (= [11] (put-frame-score [[5 5] [1 2]] []))))
+    (is (= 11 (next-frame-score [[5 5] [1 2]]))))
   (testing "can compute a strike frame score"
-    (is (= [13] (put-frame-score [[10] [1 2]] [])))))
+    (is (= 13 (next-frame-score [[10] [1 2]])))))
 
 (deftest frames-score-test
   (testing "can calc simple frame score"
